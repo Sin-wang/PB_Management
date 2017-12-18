@@ -393,6 +393,7 @@ $(document).on("click", "#color", function() {
 					
 					$(document).on("click", "#ZJ", function() {							
 						$("#add").css("display","block");
+						$("#textContent").html("");//这行代码清空弹出框
 					});
 					
 					$(document).on("click", "#closebas", function() {					
@@ -413,8 +414,7 @@ $(document).on("click", "#color", function() {
 							$("#CJ1").html("基地创建时间");
 						}*/
 						if(type=="校外教学实习基地"){
-							$("#CJ1").html("基地创建时间");
-							alert("ff");
+							$("#CJ1").html("基地创建时间");							
 						}else{
 							$("#CJ1").html("创建时间");
 						}
@@ -466,9 +466,20 @@ $(document).on("click", "#color", function() {
                         }						
 						
 						object_this.find("#undertakeCountd").val(obj[index].undertake);
-						object_this.find("#usernamed").val(obj[index].username);
-						object_this.find("#userphoned").val(obj[index].phone);
-
+						//基地联系人
+						if(obj[index].username=="null"){
+							object_this.find("#usernamed").val("");
+						}else{
+							object_this.find("#usernamed").val(obj[index].username);
+						}
+						//object_this.find("#usernamed").val(obj[index].username);
+						//基地联系人电话
+						//object_this.find("#userphoned").val(obj[index].phone);
+						if(obj[index].phone=="null"){
+							object_this.find("#userphoned").val("");
+						}else{
+							object_this.find("#userphoned").val(obj[index].phone);
+						}
 						//将传来的专业名进行分开
 						var str1 = obj[index].facemajor;
 						var str2 = obj[index].majorid;
@@ -483,7 +494,14 @@ $(document).on("click", "#color", function() {
 						} 
 						object_this.find("#major_orientedd").html(majorString3);
 						object_this.find("#major_orientedd1").html(majorString3);
-						object_this.find("#linkAddressd").val(obj[index].land_address);
+						
+						//通信地址
+						if(obj[index].land_address=="null"){
+							object_this.find("#linkAddressd").val("");
+						}else{
+							object_this.find("#linkAddressd").val(obj[index].land_address);
+						}
+						
 				
 						object_this.find("#collegenamed").val(obj[index].collegeName);
 						object_this.find("#collegephoned").val(obj[index].collegePhone);
@@ -496,9 +514,22 @@ $(document).on("click", "#color", function() {
 							object_this.find("#resourced").prop("href", obj[index].material_path);
 						}
 						object_this.find("#setdated").val(obj[index].buildtime);
-						object_this.find("#adddate").val(obj[index].endtime);						
+						//object_this.find("#adddate").val(obj[index].endtime);
+						//截止日期
+						if(obj[index].endtime=="null"){
+							object_this.find("#adddate").val("");
+						}else{
+							object_this.find("#adddate").val(obj[index].endtime);
+						}
 						object_this.find("#starget").html("<span id='delateStar' class='icon-remove-sign'></span>"+$(this).closest('tr').find('td:eq(9)').html());
-						object_this.find("#personDuty").val(obj[index].resperson);
+						
+						//法定负责人
+						if(obj[index].resperson=="null"){
+							object_this.find("#personDuty").val("");
+						}else{
+							object_this.find("#personDuty").val(obj[index].resperson);
+						}
+						
 											
 						object_this.show();
 
@@ -733,9 +764,41 @@ $(document).on("click", "#color", function() {
 							});
 							return;
 						}
+						if(setdated==""){
+							bootbox.alert({
+								message : "请填写创建日期",
+								size : 'small'
+							});
+							return;
+						}
 						if(adddate==""){
 							bootbox.alert({
 								message : "请填写截止日期",
+								size : 'small'
+							});
+							return;
+						}
+						var start1=setdated.split("-");
+						var end1=adddate.split("-");
+						var time=0;
+						if((end1[0]-start1[0])<0){
+							time++;
+						}else{
+							if(end1[0]===start1[0]){
+								if((end1[1]-start1[1])<0){
+									time++;
+								}else{
+									if(end1[1]===start1[1]){
+									   if((end1[2]-start1[2]<0)){
+										   time++;
+									   }
+									   }
+								}
+							}
+						}
+						if(time!==0){
+							bootbox.alert({
+								message : "创建时间不能大于截止日期！",
 								size : 'small'
 							});
 							return;
@@ -813,6 +876,7 @@ $(document).on("click", "#color", function() {
 							data : {
 								"baseid" : baseid,
 								"star" : star,
+								"setdated":setdated,
 								"adddate" : adddate,
 							    "basenamed":basenamed,								
 								"basetyped":basetyped,
@@ -895,6 +959,7 @@ $(document).on("click", "#color", function() {
 						var personTel=$("#personTel").val();
 						var lawperson=$("#lawPerson").val();
 						var validdastart=$("#validdastart").val();
+						
 						var validdaend=$("#validdaend").val();
 						var limit_population=$("#limit-population").val().trim();
 						var collegeNameIt=$("#collegeNameIt").val().trim();
@@ -961,6 +1026,9 @@ $(document).on("click", "#color", function() {
 							 return;
 							}
 							}
+					if(basetype!=2){//新农基地不需要限制jimao
+						
+						
 						if(baseaddress==""){
 							bootbox.alert({
 								message : "请填写通信地址",
@@ -989,22 +1057,26 @@ $(document).on("click", "#color", function() {
 							});
 						 return;	
 						}
+					}	
+						
+						
 						if(collegeNameIt==""){
 							msgCollege=(basetype==2?"请填写服务团队负责人":"请填写学院联系人");
 							bootbox.alert({
 								message : msgCollege,
 								size : 'small'
 							});
-						 return;	
+							return;
+												 	
 						}
-						if(collegeTelIt==""){
+						/*if(collegeTelIt==""){
 							msgCollege=(basetype==2?"请填写服务团队负责人电话":"请填写学院联系人电话");
 							bootbox.alert({
 								message : msgCollege,
 								size : 'small'
 							});
 						 return;	
-						}
+						}*/
 						if(unitIt==""){
 							if(basetype==2){
 								bootbox.alert({
@@ -1029,19 +1101,28 @@ $(document).on("click", "#color", function() {
 					        });
 							return;
 						}
-						if(validdastart==""){
+						if((basetype==2||basetype==1)&&validdastart==""){
 							 bootbox.alert({
-									message : "请填写创建日期",
+									message : "请填写基地创建日期",
 									size : 'small'
 								});
 							 return;
+						}else if(validdastart==""){
+							bootbox.alert({
+								message : "请填写创建日期",
+								size : 'small'
+							});
+						 return;
 						}
 						if(validdaend==""){
-							 bootbox.alert({
+							if(basetype!=2){//新农基地截止日期不需要限制jimao
+								bootbox.alert({
 									message : "请填写截止日期",
 									size : 'small'
 								});
 							 return;
+							}
+							 
 						}
 						var start=validdastart.split("-");
 						var end=validdaend.split("-");
@@ -1062,11 +1143,14 @@ $(document).on("click", "#color", function() {
 							}
 						}
 						if(time!==0){
-							bootbox.alert({
-								message : "截止日期超过创建日期,请更改",
-								size : 'small'
-							});
-							return;
+							if(!basetype==2){
+								bootbox.alert({
+									message : "截止日期超过创建日期,请更改",
+									size : 'small'
+								});
+								return;
+							}
+							
 						}
 						$("#myForm").submit();
 					});
@@ -1467,7 +1551,7 @@ $(document).on("change", "#deptSelectOne1", function() {
 $(document).on("click", ".majorcheck1", function() {
 	var obj=$(this).children('input');		
 	var str="<span class='majorchoose1'><input name='majorid1' type='checkbox' checked  value='"+obj.val()+"' class='"+obj.attr('class')+"' placeholder='"+obj.prop("placeholder")+"'/><label>"+obj.attr('class')+"</label></span>";
-	this.remove();
+	$(this).remove();
 	$("#majorSuo1").append(str);	
 	var tag=$("#majormain1").css("display");
 	if(tag=="none"){
@@ -1488,7 +1572,7 @@ $(document).on("click", ".majorchoose1", function() {
 
 	}
 	var str="<span class='majorcheck1'><input type='checkbox' name='majorcheck1' value='"+obj.val()+"' class='"+obj.attr('class')+"' placeholder='"+obj.prop("placeholder")+"'/><label>"+obj.attr('class')+"</label></span>";
-	this.remove();
+	$(this).remove();
 	$(".majorhide1").append(str);	
 	if($("#majorSuo1 .majorchoose1")[0]==null){			
 		$("#majormain1").css("display","none");
@@ -1519,5 +1603,19 @@ $(document).on("click", ".confirm1", function() {
 	}
 	$("#deptSelectOne1").val("");
 });
+
+$(document).on("change", "#basetype0", function(){
+	var basetype =$("#basetype0").val();
+	$("#CJ").html("创建时间"+'<span class="setTag">*</span>');
+	if(basetype==2){
+		$(".hideTag").hide();
+	}else{
+		$(".hideTag").show();
+	}
+	if(basetype==1||basetype==2){
+		$("#CJ").html("基地创建时间"+'<span class="setTag">*</span>');
+	}
+});
+
 
 

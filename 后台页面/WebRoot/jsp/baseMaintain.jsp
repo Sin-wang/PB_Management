@@ -408,11 +408,10 @@
 											<td>基地<br>编号</td>
 											<td><input type="text" id="baseid" disabled
 												class="form-control" /></td>
-											<input type="hidden" id="hiddenbaseid"class="form-control" /><!-- 隐藏框by jimao -->
+											<input type="hidden" id="hiddenbaseid" class="form-control" /><!-- 隐藏框by jimao -->
 											<td>基地<br>名称 </td>
 											<td><input type="text" id="basenamed"
-												class="form-control"><span id="display"
-												style="color:#f00;"> </span></td>
+												class="form-control"></td>
 										</tr>
 										<tr>
 											<td>基地<br>类型 </td>
@@ -521,8 +520,8 @@
 										<tr id="hidecol">
 
 											<td id="CJ1">创建<br>时间</td>
-											<td><input type="text" id="setdated" disabled
-												class="form-control"></td>
+											<td><input type="text" id="setdated"
+												class="laydate-icon"></td>
 											<td>截止日期 </td>
 											<td><input type="text" id="adddate"
 												${college==null?"":"disabled='disabled'"}
@@ -734,7 +733,7 @@
 										<tr id="hidecol">
 											<td>星级</td>
 											<td colspan="3">
-												<div id="starget"
+												<div class="Xstar" id="starget" 
 													${college==null?"":"style='pointer-events: none;'"}></div>
 											</td>
 										</tr>
@@ -1044,7 +1043,7 @@
 
 						<div class="form-group">
 							<label class="col-md-3 control-label">通信地址<span
-								class="setTag">*</span></label>
+								class="setTag hideTag">*</span></label>
 							<div class="col-md-6">
 								<input type="text" class="form-control" id="baseaddress"
 									name="land_addres" placeholder="">
@@ -1052,7 +1051,7 @@
 						</div>
 						<div class="form-group">
 							<label class="col-md-3 control-label">法定负责人<span
-								class="setTag">*</span></label>
+								class="setTag hideTag">*</span></label>
 							<div class="col-md-6">
 								<input type="text" class="form-control" id="lawPerson"
 									name="personDuty" placeholder="">
@@ -1060,7 +1059,7 @@
 						</div>
 						<div class="form-group">
 							<label class="col-md-3 control-label">基地联系人<span
-								class="setTag">*</span></label>
+								class="setTag hideTag">*</span></label>
 							<div class="col-md-6">
 								<input type="text" class="form-control" id="personName"
 									name="username" placeholder="">
@@ -1069,7 +1068,7 @@
 
 						<div class="form-group">
 							<label class="col-md-3 control-label">基地联系人电话<span
-								class="setTag">*</span></label>
+								class="setTag hideTag">*</span></label>
 							<div class="col-md-6">
 								<input type="text" class="form-control" id="personTel"
 									name="phone" placeholder="">
@@ -1121,7 +1120,7 @@
 						</div>
 						<div class="form-group">
 							<label class="col-md-3 control-label">截止日期<span
-								class="setTag">*</span></label>
+								class="setTag hideTag">*</span></label>
 							<div class="col-md-6">
 								<input type="text" id="validdaend" name="end_time"
 									class="end_time laydate-icon" placeholder="">
@@ -1221,6 +1220,9 @@
 		});
 		laydate({
 			elem : '#adddate'
+		});
+		laydate({
+			elem : '#setdated'
 		});
 		jQuery(document).ready(function() {
 
